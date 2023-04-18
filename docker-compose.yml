@@ -1,0 +1,51 @@
+version: "3"
+
+services:
+  
+  server:
+    image: api-server
+    container_name: api-server
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    networks:
+      - network
+    volumes:
+      - ./server/logs:/app/logs
+
+  loki:
+    image: grafana/loki:2.3.0
+    container_name: logging-loki
+    networks:
+      - network
+    ports:
+      - 3100:3100
+    volumes:
+      - ./configs/loki-config.yml:/etc/loki/local-config.yaml
+    command: -config.file=/etc/loki/local-config.yaml
+
+  promtail:
+    image: grafana/promtail:2.3.0
+    container_name: logging-promtail
+    depends_on:
+      - server
+      - loki
+    networks:
+      - network
+    volumes:
+      - ./server/logs:/logs
+      - ./configs/promtail-config.yml:/etc/promtail/config.yml
+    command: -config.file=/etc/promtail/config.yml
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: logging-grafana
+    depends_on:
+      - loki
+    networks:
+      - network
+    ports:
+      - 3000:3000
+
+networks:
+  network:
