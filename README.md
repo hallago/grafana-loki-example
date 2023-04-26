@@ -2,22 +2,45 @@
 
 An example logging system using Grafana Loki.
 
-## API Server
+<h3 align="center">
+<img src="img/Grafana-Loki.png" alt="struct" />
+</h3>
 
-- port 80
-- Log files are saved to `./api/runtime/logs`
+## Usage
 
-## Loki
+### Docker
 
-Store logs received from Promtail.
+```
+// start
+$ cd grafana-loki-example
+$ docker-compose up -d
 
-- port 3100
+// stop
+$ docker-compose stop
+```
 
-## Promtail
+### Grafana WebPage
 
-Collect string data from log files and send to Loki.
+```
+http://localhost:3000
+User: admin
+Pass: admin
+```
 
-## Grafana
+## ScreenShot
 
-Visualize data from Loki.
+<img src="img/2023-04-23-6.55.04.png" alt="01" />
+<img src="img/2023-04-23-6.55.44.png" alt="02" />
+<img src="img/2023-04-23-6.56.18.png" alt="03" />
 
+
+## Container
+
+* `server` - Log files are saved to `./server/logs`
+* `loki` - Store logs received from Promtail.
+* `promtail` - Collect string data from log files and send to Loki.
+* `grafana` - Visualize data from Loki.
+
+## Grafana Data Sources
+
+- Loki: `http://loki:3100`
